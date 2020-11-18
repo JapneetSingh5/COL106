@@ -124,13 +124,15 @@ public class A1List extends List {
     public boolean sanity()
     {
         //We check if the list has a loop, we also check some invariants on every node as we traverse the list
+        //We check for a loop first as if there is a loop, we cannot use currentNode!=null as a condition for while loop
+        //which will be required for later checks
         A1List fastIterator = this.getFirst();
         A1List slowIterator = this.getFirst();
         if(fastIterator==null && slowIterator==null){ //list is empty => list is sane
             // System.out.println("Empty list");
             return true;
         }
-        //first, we check if we have a circular loop in the list
+        //FIRST, we check if we have a circular loop in the list
         while(fastIterator!=null){
             fastIterator = (fastIterator.getNext() == null) ? null : fastIterator.getNext().getNext();
             slowIterator = slowIterator.getNext();
@@ -141,9 +143,13 @@ public class A1List extends List {
                 return false;
             }
         }
+
         A1List currentNode = this.getFirst();
-        //second, we check for node invariant: node.next.prev=node
+        //SECOND, we check for some node invariants
         while(currentNode.getNext()!=null){
+            //any node within the list cannot be null
+            //currentNode.prev.next should always be the currentNode itself, currentNode.next.prev==currentNode is also implicit
+            //getNext() takes care of the sentinel nodes
             if(currentNode==null || currentNode.next.prev!=currentNode){
                 // System.out.println("Invariant false in list");
                 return false;
