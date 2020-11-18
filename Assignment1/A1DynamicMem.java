@@ -25,9 +25,14 @@ public class A1DynamicMem extends DynamicMem {
 
     public int Allocate(int blockSize) {
         // System.out.println("Allocating");
-        // if(!freeBlk.sanity() || !allocBlk.sanity()){
-        //     return -1;
-        // }
+        if(!freeBlk.sanity()){
+            System.out.println("Free Block");
+            return -1;
+        }
+        if(!allocBlk.sanity()){
+            System.out.println("Alloc Block");
+            return -1;
+        }
         if(blockSize>this.Memory.length){
             return -1;
         }
@@ -40,58 +45,106 @@ public class A1DynamicMem extends DynamicMem {
             freeBlk.Delete(toBeAllocated);
             return toBeAllocated.address;
         }else{
-            freeBlk.Insert(toBeAllocated.address+blockSize, toBeAllocated.size - blockSize, toBeAllocated.size - blockSize);
             allocBlk.Insert(toBeAllocated.address, blockSize, toBeAllocated.address);
             freeBlk.Delete(toBeAllocated);
+            freeBlk.Insert(toBeAllocated.address+blockSize, toBeAllocated.size - blockSize, toBeAllocated.size - blockSize);
             return toBeAllocated.address;
         }
     } 
     
     public int Free(int startAddr) {
         // System.out.println("Freeing");
+        if(!freeBlk.sanity()){
+            System.out.println("Free Block");
+            return -1;
+        }
+        if(!allocBlk.sanity()){
+            System.out.println("Alloc Block");
+            return -1;
+        }
         Dictionary toBeFreed = allocBlk.Find(startAddr, true);
         if(toBeFreed == null){
             // System.out.println("Freeing");
             return -1;
         }else{
-            freeBlk.Insert(toBeFreed.address, toBeFreed.size, toBeFreed.key);
+            freeBlk.Insert(toBeFreed.address, toBeFreed.size, toBeFreed.size);
             allocBlk.Delete(toBeFreed);
             return 0;
         }
     }
 
-    public static void main(String[] args){
-        DynamicMem mem = new A1DynamicMem(20);
-        System.out.println("");
-        mem.Allocate(10);
-        System.out.println("Free");
-        for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-            System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-        }
-        System.out.println("Allocated");
-        for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-            System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-        }
-        System.out.println("");
-        mem.Allocate(20);
-        System.out.println("Free");
-        for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-            System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-        }
-        System.out.println("Allocated");
-        for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-            System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-        }
-        System.out.println("");
-        mem.Free(50);
-        System.out.println("Free");
-        for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-            System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-        }
-        System.out.println("Allocated");
-        for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-            System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-        }
-    }
+    // public static void main(String[] args){
+    //     DynamicMem mem = new A1DynamicMem(100);
+    //     System.out.println("");
+    //     mem.Allocate(20);
+    //     System.out.println("Free");
+    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("Allocated");
+    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("");
+    //     mem.Allocate(50);
+    //     System.out.println("Free");
+    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("Allocated");
+    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("");
+    //     mem.Allocate(20);
+    //     System.out.println("Free");
+    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("Allocated");
+    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("");
+    //     mem.Allocate(5);
+    //     System.out.println("Free");
+    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("Allocated");
+    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("");
+    //     mem.Free(20);
+    //     System.out.println("Free");
+    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("Allocated");
+    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("");
+    //     mem.Free(0);
+    //     System.out.println("Free");
+    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("Allocated");
+    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("");
+    //     mem.Free(70);
+    //     System.out.println("Free");
+    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    //     System.out.println("Allocated");
+    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
+    //     }
+    // }
     
 }

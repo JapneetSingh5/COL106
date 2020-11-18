@@ -79,19 +79,15 @@ public class A1List extends List {
             iterator2 = this;
             while(iterator1.next!=null){
                 if(k<=iterator1.key){
-                    if(approxMatch==null || approxMatch.key>=iterator1.key){
                         approxMatch = iterator1;
-                        // System.out.println("Matched "+ "Node Key "+ iterator1.key + " Size Needed: " + k);  
-                    } 
+                        return approxMatch;
                 }
                 iterator1 = iterator1.next;
             }
             while(iterator2.prev!=null){
                 if(k<=iterator1.key){
-                    if(approxMatch==null || approxMatch.key>=iterator1.key){
-                        approxMatch = iterator1;
-                        // System.out.println("Matched "+ "Node Key "+ iterator2.key + " Size Needed: " + k);  
-                    }   
+                        approxMatch = iterator2;
+                        return approxMatch;
                 }
                 iterator2 = iterator2.prev;
             }
@@ -148,7 +144,7 @@ public class A1List extends List {
         A1List currentNode = this.getFirst();
         //second, we check for node invariant: node.next.prev=node
         while(currentNode.getNext()!=null){
-            if(currentNode.next.prev!=currentNode){
+            if(currentNode==null || currentNode.next.prev!=currentNode){
                 // System.out.println("Invariant false in list");
                 return false;
             }
@@ -157,25 +153,25 @@ public class A1List extends List {
         return true;
     }
 
-    // public static void main(String[] args){  //function to debug the class methods
-    //     A1List list = new A1List();
-    //     list.Insert(10, 10, 10);
-    //     list.Insert(20, 20, 20);
-    //     list.Insert(30, 30, 30);
-    //     list.Insert(16, 30, 16);
-    //     list.Insert(14, 30, 14);
-    //     list.Insert(12, 30, 12);
-    //     list.Insert(37, 30, 37);
-    //     // list.getFirst().next = new A1List(23,23,23);
-    //     // list.getFirst().next.next = list.getFirst();
-    //     int count = 0;
-    //     System.out.println(list.sanity());
-    //     for(A1List dic = list.getFirst(); dic!=null; dic =dic.getNext()){
-    //         count++;
-    //         System.out.println(dic.address + " Count: " + count);
-    //     }
+    public static void main(String[] args){  //function to debug the class methods
+        A1List list = new A1List();
+        list.Insert(10, 10, 10);
+        list.Insert(20, 20, 20);
+        list.Insert(30, 30, 30);
+        list.Insert(16, 30, 16);
+        list.Insert(14, 30, 14);
+        list.Insert(12, 30, 12);
+        list.Insert(37, 30, 37);
+        // list.getFirst().next = new A1List(23,23,23);
+        // list.getFirst().next.next = list.getFirst();
+        int count = 0;
+        System.out.println(list.sanity());
+        for(A1List dic = list.getFirst(); dic!=null; dic =dic.getNext()){
+            count++;
+            System.out.println(dic.address + " Count: " + count);
+        }
         
-    // }
+    }
 
 }
 
