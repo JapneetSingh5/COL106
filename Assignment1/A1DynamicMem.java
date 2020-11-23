@@ -25,15 +25,19 @@ public class A1DynamicMem extends DynamicMem {
 
     public int Allocate(int blockSize) {
         // System.out.println("Allocating");
-        if(!freeBlk.sanity()){
-            System.out.println("Free Block");
-            return -1;
-        }
-        if(!allocBlk.sanity()){
-            System.out.println("Alloc Block");
-            return -1;
-        }
-        if(blockSize>this.Memory.length){
+
+        // Sanity checks for debugging purposes
+
+        // if(!freeBlk.sanity()){
+        //     System.out.println("Free Block");
+        //     return -1;
+        // }
+        // if(!allocBlk.sanity()){
+        //     System.out.println("Alloc Block");
+        //     return -1;
+        // }
+        
+        if(blockSize>this.Memory.length || blockSize<=0){ //error if size to be allocated is <=0 or is greater than Memory array size
             return -1;
         }
         Dictionary toBeAllocated = freeBlk.Find(blockSize, false);
@@ -53,18 +57,26 @@ public class A1DynamicMem extends DynamicMem {
     } 
     
     public int Free(int startAddr) {
+
         // System.out.println("Freeing");
-        if(!freeBlk.sanity()){
-            System.out.println("Free Block");
+        
+        // Sanity checks for debugging purposes
+
+        // if(!freeBlk.sanity()){
+        //     System.out.println("Free Block");
+        //     return -1;
+        // }
+        // if(!allocBlk.sanity()){
+        //     System.out.println("Alloc Block");
+        //     return -1;
+        // }
+
+        if(startAddr<0 || startAddr>this.Memory.length){
             return -1;
         }
-        if(!allocBlk.sanity()){
-            System.out.println("Alloc Block");
-            return -1;
-        }
+
         Dictionary toBeFreed = allocBlk.Find(startAddr, true);
         if(toBeFreed == null){
-            // System.out.println("Freeing");
             return -1;
         }else{
             freeBlk.Insert(toBeFreed.address, toBeFreed.size, toBeFreed.size);
@@ -73,78 +85,218 @@ public class A1DynamicMem extends DynamicMem {
         }
     }
 
-    // public static void main(String[] args){
-    //     DynamicMem mem = new A1DynamicMem(100);
-    //     System.out.println("");
-    //     mem.Allocate(20);
-    //     System.out.println("Free");
-    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("Allocated");
-    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("");
-    //     mem.Allocate(50);
-    //     System.out.println("Free");
-    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("Allocated");
-    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("");
-    //     mem.Allocate(20);
-    //     System.out.println("Free");
-    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("Allocated");
-    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("");
-    //     mem.Allocate(5);
-    //     System.out.println("Free");
-    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("Allocated");
-    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("");
-    //     mem.Free(20);
-    //     System.out.println("Free");
-    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("Allocated");
-    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("");
-    //     mem.Free(0);
-    //     System.out.println("Free");
-    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("Allocated");
-    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("");
-    //     mem.Free(70);
-    //     System.out.println("Free");
-    //     for(A1List dic = (A1List) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    //     System.out.println("Allocated");
-    //     for(A1List dic = (A1List) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
-    //         System.out.println(dic.address + " -> "+ (dic.size+dic.address));
-    //     }
-    // }
+    // main function used to test and debug the code >>>
+
+    public static void main(String[] args){
+        DynamicMem mem = new A2DynamicMem(40, 2);
+        int result;
+
+        System.out.println();
+
+        mem.Allocate(1);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(7);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(13);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(11);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(9);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(3);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(1);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(1);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(1);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(1);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        mem.Allocate(1);
+        System.out.println("Alloc");
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+        System.out.println();
+        System.out.println("Free");
+        for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        }
+
+        System.out.println();
+
+        int count = 0;
+
+        for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+            count++;
+            System.out.println("Count: " + count);
+        }
+
+
+
+        // mem.Free(10);
+        // System.out.println("Alloc");
+        // for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+        // System.out.println();
+        // System.out.println("Free");
+        // for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+
+        // System.out.println();
+
+        // mem.Free(0);
+        // System.out.println("Alloc");
+        // for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+        // System.out.println();
+        // System.out.println("Free");
+        // for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+
+        // System.out.println();
+
+        // mem.Free(20);
+        // System.out.println("Alloc");
+        // for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+        // System.out.println();
+        // System.out.println("Free");
+        // for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+
+
+        // System.out.println();
+
+        // mem.Defragment();
+        // System.out.println("Alloc");
+        // for(BSTree dic = (BSTree) mem.allocBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.print("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+        // System.out.println();
+        // System.out.println("Free");
+        // for(BSTree dic = (BSTree) mem.freeBlk.getFirst(); dic!=null; dic =dic.getNext()){
+        //     System.out.println("(" + dic.address +"," + dic.size + "," + dic.key+") ");
+        // }
+
+
+    }
     
 }
