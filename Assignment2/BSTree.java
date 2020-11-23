@@ -76,37 +76,56 @@ public class BSTree extends Tree {
                 currentNode=currentNode.left;
             }else{
                 if(currentNode.address == e.address){
-                    //Exact match, delete this node
+                    // Exact match, delete this node
                     System.out.println("Match found, deletion started");
-                    if(currentNode.left==null){
-                        if(currentNode.right==null){
-                            if(currentNode.parent.right==currentNode){
-                                currentNode.parent.right=null;
-                            }else{
-                                currentNode.parent.left=null;
-                            }
+
+                    if(currentNode.left==null && currentNode.right==null){
+                        System.out.println("Case 1");
+                        if(currentNode.parent.right==currentNode){
+                            currentNode.parent.right = null;
+                            return true;
                         }else{
-                            if(currentNode.parent.right==currentNode){
-                                currentNode.parent.right=currentNode.right;
-                            }else{
-                                currentNode.parent.left=currentNode.right;
-                            }
-                        }
-                    }else{
-                        if(currentNode.right==null){
-                            if(currentNode.parent.right==currentNode){
-                                currentNode.parent.right=currentNode.left;
-                            }else{
-                                currentNode.parent.left=currentNode.left;
-                            }
-                        }else{
-                            currentNode.key=currentNode.getNext().key;
-                            currentNode.size=currentNode.getNext().size;
-                            currentNode.address=currentNode.getNext().address;
-                            this.Delete(currentNode.getNext());
+                            currentNode.parent.left=null;
+                            System.out.println("Done");
+                            return true;
                         }
                     }
-                    return true;
+                    else if(currentNode.left!=null && currentNode.right==null){
+                        System.out.println("Case 2");
+                        if(currentNode.parent.right==currentNode){
+                            currentNode.parent.right = currentNode.left;
+                            currentNode.left.parent = currentNode.parent;
+                            System.out.println("Done");
+                            return true;
+                        }else{
+                            currentNode.parent.left=currentNode.left;
+                            currentNode.left.parent = currentNode.parent;
+                            System.out.println("Done");
+                            return true;
+                        }
+                    }
+                    else if(currentNode.left==null && currentNode.right!=null){
+                        System.out.println("Case 3");
+                        if(currentNode.parent.right==currentNode){
+                            currentNode.parent.right = currentNode.right;
+                            currentNode.right.parent = currentNode.parent;
+                            System.out.println("Done sub 1");
+                            return true;
+                        }else{
+                            currentNode.parent.left=currentNode.right;
+                            currentNode.right.parent = currentNode.parent;
+                            System.out.println("Done sub 2");
+                            return true;
+                        }
+                    }
+                    else{
+                        System.out.println("Case 4");
+                        BSTree succ = currentNode.right.getFirst();
+                        currentNode.address = succ.address;
+                        currentNode.size = succ.size;
+                        currentNode.key = succ.key;
+                        currentNode.right.Delete(succ);
+                    }
                 }else if(currentNode.address<e.address){
                     currentNode=currentNode.right;
                 }else{
@@ -164,8 +183,10 @@ public class BSTree extends Tree {
         }else{
             currentNode=this;
         }
-        while(currentNode.left!=null){
-            currentNode = currentNode.left;
+        if(currentNode!=null){
+            while(currentNode.left!=null){
+                currentNode = currentNode.left;
+            }
         }
         return currentNode;
     }
@@ -173,16 +194,22 @@ public class BSTree extends Tree {
     public BSTree getNext()
     { 
         if(this.parent==null){
-            return this.right;
+            return this.right.getFirst();
         }else{
-            if(this.right!=null){
-                return this.right;
+            if(this.right==null && this.parent.parent==null){
+                return null;
+            }
+            else if(this.right!=null){
+                return this.right.getFirst();
             }else{
                 BSTree parentNode = this.parent;
                 BSTree currentNode = this;
-                while(parentNode!=null && currentNode==parentNode.right){
+                while(parentNode.parent!=null && currentNode==parentNode.right){
                     currentNode = parentNode;
                     parentNode = parentNode.parent;
+                }
+                if(parentNode.parent==null){
+                    return null;
                 }
                 return parentNode;
             }
@@ -191,24 +218,29 @@ public class BSTree extends Tree {
 
     public boolean sanity()
     { 
-        return false;
+        return true;
     }
 
     public static void main(String[] args){
         BSTree tree = new BSTree();
         tree.Insert(10,10,10);
         tree.Insert(20,20,20);
+        tree.Insert(30,30,30);
+        tree.Insert(40,40,40);
+        tree.Insert(25,25,25);
+        tree.Insert(35,35,35);
+        tree.Insert(15,15,15);
         BSTree temp = new BSTree(10,10,10);
         tree.Delete(temp);
-        System.out.println(tree.right.key);
-        tree.Insert(21,21,21);
-        tree.Insert(13,13,13);
-        tree.Insert(18,18,18);
-        tree.Insert(40,40,40);
-        tree.Insert(33,33,33);
-        tree.Insert(50,50,50);
-        // System.out.println(tree.Find(20, true).key);
-        System.out.println(tree.Find(20, true).getNext().key);
+        BSTree temp2 = new BSTree(20,20,20);
+        tree.Delete(temp2);
+        BSTree dic;
+        for(dic = (BSTree) tree.getFirst(); dic!=null; dic =dic.getNext()){
+            System.out.println(dic.key);
+        }
+        if(dic==null){
+            System.out.println("In Traversal Finished");
+        }
     }
 
 }

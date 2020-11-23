@@ -158,26 +158,31 @@ public class A1List extends List {
         }
         return true;
     }
+    
+    // main function used to test and debug the code >>>
 
-    public static void main(String[] args){  //function to debug the class methods
-        A1List list = new A1List();
-        list.Insert(10, 10, 10);
-        list.Insert(20, 20, 20);
-        list.Insert(30, 30, 30);
-        list.Insert(16, 30, 16);
-        list.Insert(14, 30, 14);
-        list.Insert(12, 30, 12);
-        list.Insert(37, 30, 37);
-        // list.getFirst().next = new A1List(23,23,23);
-        // list.getFirst().next.next = list.getFirst();
-        int count = 0;
-        System.out.println(list.sanity());
-        for(A1List dic = list.getFirst(); dic!=null; dic =dic.getNext()){
-            count++;
-            System.out.println(dic.address + " Count: " + count);
-        }
+    // public static void main(String[] args){  //function to debug the class methods
+    //     A1List list = new A1List();
+    //     // list.Insert(10, 10, 10);
+    //     // list.Insert(20, 20, 20);
+    //     // list.Insert(30, 30, 30);
+    //     // list.Insert(16, 30, 16);
+    //     // list.Insert(14, 30, 14);
+    //     // list.Insert(12, 30, 12);
+    //     // list.Insert(37, 30, 37);
+    //     // list.getFirst().next = new A1List(23,23,23);
+    //     // list.getFirst().next.next = list.getFirst();
+    //     int count = 0;
+    //     System.out.println(list.sanity());
+    //     for(A1List dic = list.getFirst(); dic!=null; dic =dic.getNext()){
+    //         count++;
+    //         System.out.println(dic.address + " Count: " + count);
+    //     }
+    //     if(list.getFirst()==null){
+    //         System.out.println("Count: " + 0);
+    //     }
         
-    }
+    // }
 
 }
 
