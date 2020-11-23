@@ -77,49 +77,49 @@ public class BSTree extends Tree {
             }else{
                 if(currentNode.address == e.address){
                     // Exact match, delete this node
-                    System.out.println("Match found, deletion started");
+                    // System.out.println("Match found, deletion started");
 
                     if(currentNode.left==null && currentNode.right==null){
-                        System.out.println("Case 1");
+                        //System.out.println("Case 1");
                         if(currentNode.parent.right==currentNode){
                             currentNode.parent.right = null;
                             return true;
                         }else{
                             currentNode.parent.left=null;
-                            System.out.println("Done");
+                            // System.out.println("Done");
                             return true;
                         }
                     }
                     else if(currentNode.left!=null && currentNode.right==null){
-                        System.out.println("Case 2");
+                        //System.out.println("Case 2");
                         if(currentNode.parent.right==currentNode){
                             currentNode.parent.right = currentNode.left;
                             currentNode.left.parent = currentNode.parent;
-                            System.out.println("Done");
+                            // System.out.println("Done");
                             return true;
                         }else{
                             currentNode.parent.left=currentNode.left;
                             currentNode.left.parent = currentNode.parent;
-                            System.out.println("Done");
+                            // System.out.println("Done");
                             return true;
                         }
                     }
                     else if(currentNode.left==null && currentNode.right!=null){
-                        System.out.println("Case 3");
+                        //System.out.println("Case 3");
                         if(currentNode.parent.right==currentNode){
                             currentNode.parent.right = currentNode.right;
                             currentNode.right.parent = currentNode.parent;
-                            System.out.println("Done sub 1");
+                            // System.out.println("Done sub 1");
                             return true;
                         }else{
                             currentNode.parent.left=currentNode.right;
                             currentNode.right.parent = currentNode.parent;
-                            System.out.println("Done sub 2");
+                            // System.out.println("Done sub 2");
                             return true;
                         }
                     }
                     else{
-                        System.out.println("Case 4");
+                        //System.out.println("Case 4");
                         BSTree succ = currentNode.right.getFirst();
                         currentNode.address = succ.address;
                         currentNode.size = succ.size;
@@ -217,8 +217,67 @@ public class BSTree extends Tree {
     }
 
     public boolean sanity()
-    { 
-        return true;
+    {   
+        //In our implementation,. the root node is a sentinel node
+        //The sentinel node has its parent as null
+        //Sentinel node MUST not have a left child, right chile may or may not be null
+        if(this.parent==null){
+            if(this.left!=null) return false;
+        }
+        BSTree currentNode;
+        if(this.parent==null){
+            currentNode = this.right;
+        }else{
+            currentNode = this;
+        }
+
+        if(currentNode==null){
+            return true;
+        }
+
+        //Now, We check for BST Ordering Invariant
+        //In this case, (address, size, key) tuple determines the order
+        //for Node1<Node2, Node1.key<Node2.key OR ( Node1.key==Node2.key AND Node1.address<Node2.address) 
+        //as addresses will ideally be unique, we will have total ordering in the tree
+
+        //Node.key must be less than or equal to Node.right's key
+        if(currentNode.right!=null && currentNode.key>currentNode.right.key){
+            //If Node.right.key<Node.key, BST Invariant does not hold
+            return false;
+        }
+        if(currentNode.right!=null && currentNode.key==currentNode.right.key){
+            //If Node.key is equal to Node.right.key, we break the tie using the address
+            //Node.right.address must be strictly less than Node's address
+            if(currentNode.right.address<currentNode.address){
+                return false;
+            }
+        }
+        //Similarly, Node.key must begreater than OR equal to Node.left.key
+        if(currentNode.left!=null && currentNode.key<currentNode.left.key){
+            //If Node.left.key>Node.key, BST Invariant is not satisfied
+            return false;
+        }
+        if(currentNode.left!=null && currentNode.key==currentNode.left.key){
+            //If Node.key==Node.left.key, we break the tie using the addresses
+            //Node.left.address must strictly be less than Node.address
+            if(currentNode.left.address>currentNode.address){
+                return false;
+            }  
+        }
+
+        if(currentNode.left==null){
+            if(currentNode.right==null){
+                return true;
+            }else{
+                return currentNode.right.sanity();
+            }
+        }else{
+            if(currentNode.right==null){
+                return currentNode.left.sanity();
+            }else{
+                return (currentNode.left.sanity()&&currentNode.right.sanity());
+            }
+        }
     }
 
     public static void main(String[] args){
