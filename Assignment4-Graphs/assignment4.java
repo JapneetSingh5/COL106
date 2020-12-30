@@ -36,16 +36,18 @@ public class assignment4 {
             v.visited=1;
             this.connectedComponents.get(componentCount-1).add(v.label);
             LinkedList<String> neighbors = this.adjMap.get(v.label);
-            for(int i=0; i<neighbors.size(); i++){
-                String neighbor = neighbors.get(i);
-                // System.out.println("Getting id for " + neighbor +", nodeId map size is "+ this.nodeId.size());
-                int index = this.nodeId.get(neighbor);
-                // System.out.println("Got it");
-                A4Vertex neighborVertex = this.vertices.get(index);
-                if(neighborVertex.visited==0){
-                    DFS(neighborVertex);
-                }
-            }  
+            if(neighbors!=null){
+                for(int i=0; i<neighbors.size(); i++){
+                    String neighbor = neighbors.get(i);
+                    // System.out.println("Getting id for " + neighbor +", nodeId map size is "+ this.nodeId.size());
+                    int index = this.nodeId.get(neighbor);
+                    // System.out.println("Got it");
+                    A4Vertex neighborVertex = this.vertices.get(index);
+                    if(neighborVertex.visited==0){
+                        DFS(neighborVertex);
+                    }
+                }  
+            }
         }
 
 
@@ -124,11 +126,12 @@ public class assignment4 {
                     for (String key : graph.adjMap.keySet()) {
                         totalDegree += graph.adjMap.get(key).size();
                     }
-                    System.out.println(totalDegree +" , " +totalKeys);
+                    // System.out.println(totalDegree +" , " +totalKeys);
                     float averageFloat = totalDegree/totalKeys;
                     // float totalKeys = graph.adjMap.keySet().size();
                     String average = String.format(java.util.Locale.US,"%.2f", averageFloat);
-                    System.out.println(average);
+                    System.out.print(average);
+                    System.out.println();
                 }catch (IOException exception) {
                     exception.printStackTrace();
                 }catch (Exception ifTotalKeysZero) {
@@ -264,10 +267,10 @@ public class assignment4 {
                         }
                     }
                     graph.performDFS();
-                    randomizedQuickSort(graph.connectedComponents, 0, graph.connectedComponents.size()-1, 2);
                     for(int c=0; c<graph.connectedComponents.size(); c++){
                         randomizedQuickSort(graph.connectedComponents.get(c), 0, graph.connectedComponents.get(c).size()-1, 3);
                     }
+                    randomizedQuickSort(graph.connectedComponents, 0, graph.connectedComponents.size()-1, 2);
                     for(int i=0; i<graph.connectedComponents.size(); i++){
                         // System.out.println("Connected Component Number "+(i+1)+", cc size is "+graph.connectedComponents.get(i).size());
                         for(int j=0; j<graph.connectedComponents.get(i).size(); j++){
@@ -333,10 +336,10 @@ public class assignment4 {
         int i = p;
         int j = r;
         while(i<j && i<=r){
-            while(i<=r && ( arr.get(i).occurences>x.occurences || (arr.get(i).occurences==x.occurences && lexSort(x.label, arr.get(i).label)<0 ) )){
+            while(i<=r && ( arr.get(i).occurences>x.occurences || (arr.get(i).occurences==x.occurences && lexSort(x.label, arr.get(i).label)>0 ) )){
                 i++;
             }
-            while(j>=p && (arr.get(j).occurences<x.occurences || (arr.get(j).occurences==x.occurences && lexSort(x.label, arr.get(j).label)>0 ) )){
+            while(j>=p && (arr.get(j).occurences<x.occurences || (arr.get(j).occurences==x.occurences && lexSort(x.label, arr.get(j).label)<0 ) )){
                 j--;
             }
             if(i<j){
@@ -353,10 +356,10 @@ public class assignment4 {
         int i = p;
         int j = r;
         while(i<j && i<=r){
-            while(i<=r && ( arr.get(i).size()>x.size() || (arr.get(i).size()==x.size() && lexSort(arr.get(i).get(0), x.get(0))>0) )){
+            while(i<=r && ( arr.get(i).size()>x.size() || (arr.get(i).size()==x.size() && lexSort(arr.get(i).get(0), x.get(0))<0) )){
                 i++;
             }
-            while(j>=p && (arr.get(j).size()<x.size() || (arr.get(j).size()==x.size() && lexSort(arr.get(i).get(0), x.get(0))<0) )){
+            while(j>=p && (arr.get(j).size()<x.size() || (arr.get(j).size()==x.size() && lexSort(arr.get(j).get(0), x.get(0))>0) )){
                 j--;
             }
             if(i<j){
@@ -373,10 +376,10 @@ public class assignment4 {
         int i = p;
         int j = r;
         while(i<j && i<=r){
-            while(i<=r && ( lexSort(x, arr.get(i))<0 ) ){
+            while(i<=r && ( lexSort(x, arr.get(i))>0 ) ){ //lexSort returns +1 when s2>s1 
                 i++;
             }
-            while(j>=p && ( lexSort(x, arr.get(j))>0 ) ){
+            while(j>=p && ( lexSort(x, arr.get(j))<0 ) ){
                 j--;
             }
             if(i<j){
@@ -397,16 +400,16 @@ public class assignment4 {
             i++;
         }
         if(i>=minLen){
-            if(len1>len2){
-                return -1;
-            }else{
+            if(len1<len2){
                 return +1;
+            }else{
+                return -1;
             }
         }
         if((int)s1.charAt(i)<(int)s2.charAt(i)){
-            return -1;
+            return +1;  //returns -1 if s2<s1 i.e. s2 should appear AFTER s1 in descending lexicographical order
         }else{
-            return +1;
+            return -1;  //returns +1 if s2>s1 i.e. s2 should appear BEFORE s1 in descending lexicographical order
         }
 
     }
