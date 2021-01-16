@@ -1,0 +1,6 @@
+Average : 2.56
+
+Time
+Average : 0.318 s
+Rank : 9.454 s
+Independent_storylines_dfs : 10.334 s
